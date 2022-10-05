@@ -12,10 +12,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const clientes_dao_1 = __importDefault(require("../daos/clientes.dao"));
-class ClientsService {
+const clientes_dao_1 = __importDefault(require("../../common/daos/clientes.dao"));
+const clients_service_1 = require("../../common/services/clients.service");
+const viacepfactory_api_1 = require("../../common/apis/viacepfactory.api");
+const apicepfactory_api_1 = require("../../common/apis/apicepfactory.api");
+class ClientsService extends clients_service_1.ClientsCommonService {
+    constructor(_viaCep, _apiCep) {
+        super();
+        this._viaCep = _viaCep;
+        this._apiCep = _apiCep;
+    }
     create(resource) {
         return __awaiter(this, void 0, void 0, function* () {
+            resource.endereco = yield this._viaCep.preencheEndereco(resource.cep);
+            if (!resource.endereco) {
+                resource.endereco = yield this._apiCep.preencheEndereco(resource.cep);
+            }
             return clientes_dao_1.default.cadastrar(resource);
         });
     }
@@ -29,16 +41,11 @@ class ClientsService {
             return clientes_dao_1.default.listar();
         });
     }
-    readById(resourceId) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return clientes_dao_1.default.buscar(resourceId);
-        });
-    }
     updateById(resource) {
         return __awaiter(this, void 0, void 0, function* () {
             return clientes_dao_1.default.atualizar(resource);
         });
     }
 }
-exports.default = new ClientsService();
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiY2xpZW50cy5zZXJ2aWNlLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vc3JjL2NsaWVudHMvc2VydmljZXMvY2xpZW50cy5zZXJ2aWNlLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7O0FBQUEsd0VBQStDO0FBSS9DLE1BQU0sY0FBYztJQUNWLE1BQU0sQ0FBQyxRQUFvQjs7WUFDN0IsT0FBTyxzQkFBVyxDQUFDLFNBQVMsQ0FBQyxRQUFRLENBQUMsQ0FBQztRQUMzQyxDQUFDO0tBQUE7SUFFSyxVQUFVLENBQUMsVUFBa0I7O1lBQy9CLE9BQU8sc0JBQVcsQ0FBQyxPQUFPLENBQUMsVUFBVSxDQUFDLENBQUM7UUFDM0MsQ0FBQztLQUFBO0lBRUssSUFBSTs7WUFDTixPQUFPLHNCQUFXLENBQUMsTUFBTSxFQUFFLENBQUM7UUFDaEMsQ0FBQztLQUFBO0lBRUssUUFBUSxDQUFDLFVBQWtCOztZQUM3QixPQUFPLHNCQUFXLENBQUMsTUFBTSxDQUFDLFVBQVUsQ0FBQyxDQUFDO1FBQzFDLENBQUM7S0FBQTtJQUVLLFVBQVUsQ0FBQyxRQUFvQjs7WUFDakMsT0FBTyxzQkFBVyxDQUFDLFNBQVMsQ0FBQyxRQUFRLENBQUMsQ0FBQztRQUMzQyxDQUFDO0tBQUE7Q0FDSjtBQUVELGtCQUFlLElBQUksY0FBYyxFQUFFLENBQUMifQ==
+exports.default = new ClientsService(new viacepfactory_api_1.ViaCepFactory(), new apicepfactory_api_1.ApiCepFactory());
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiY2xpZW50cy5zZXJ2aWNlLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vc3JjL2NsaWVudHMvc2VydmljZXMvY2xpZW50cy5zZXJ2aWNlLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7O0FBQUEsa0ZBQXlEO0FBT3pELDJFQUE2RTtBQUM3RSwyRUFBb0U7QUFDcEUsMkVBQW9FO0FBR3BFLE1BQU0sY0FBZSxTQUFRLHNDQUFvQjtJQUU3QyxZQUFvQixPQUFtQixFQUFVLE9BQW1CO1FBQ2hFLEtBQUssRUFBRSxDQUFDO1FBRFEsWUFBTyxHQUFQLE9BQU8sQ0FBWTtRQUFVLFlBQU8sR0FBUCxPQUFPLENBQVk7SUFFcEUsQ0FBQztJQUVLLE1BQU0sQ0FBQyxRQUFvQjs7WUFFN0IsUUFBUSxDQUFDLFFBQVEsR0FBRyxNQUFNLElBQUksQ0FBQyxPQUFPLENBQUMsZ0JBQWdCLENBQUMsUUFBUSxDQUFDLEdBQUcsQ0FBQyxDQUFDO1lBRXRFLElBQUcsQ0FBQyxRQUFRLENBQUMsUUFBUSxFQUFDO2dCQUNsQixRQUFRLENBQUMsUUFBUSxHQUFHLE1BQU0sSUFBSSxDQUFDLE9BQU8sQ0FBQyxnQkFBZ0IsQ0FBQyxRQUFRLENBQUMsR0FBRyxDQUFDLENBQUM7YUFDekU7WUFFRCxPQUFPLHNCQUFXLENBQUMsU0FBUyxDQUFDLFFBQVEsQ0FBQyxDQUFDO1FBQzNDLENBQUM7S0FBQTtJQUVLLFVBQVUsQ0FBQyxVQUFrQjs7WUFDL0IsT0FBTyxzQkFBVyxDQUFDLE9BQU8sQ0FBQyxVQUFVLENBQUMsQ0FBQztRQUMzQyxDQUFDO0tBQUE7SUFFSyxJQUFJOztZQUNOLE9BQU8sc0JBQVcsQ0FBQyxNQUFNLEVBQUUsQ0FBQztRQUNoQyxDQUFDO0tBQUE7SUFFSyxVQUFVLENBQUMsUUFBb0I7O1lBQ2pDLE9BQU8sc0JBQVcsQ0FBQyxTQUFTLENBQUMsUUFBUSxDQUFDLENBQUM7UUFDM0MsQ0FBQztLQUFBO0NBQ0o7QUFFRCxrQkFBZSxJQUFJLGNBQWMsQ0FDN0IsSUFBSSxpQ0FBYSxFQUFFLEVBQ25CLElBQUksaUNBQWEsRUFBRSxDQUNsQixDQUFDIn0=

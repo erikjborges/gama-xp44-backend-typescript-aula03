@@ -1,5 +1,5 @@
 import express from 'express';
-import clientsService from '../services/clients.service';
+import clientsService from '../../common/services/clients.service';
 import debug from 'debug';
 
 const log: debug.IDebugger = debug('app:users-middleware');
@@ -28,7 +28,7 @@ class ClientsMiddleware {
         if (!user) {
             next();
         } else {
-            res.status(404).send({error: `Usuário ${resourceID} já existe existe`});
+            res.status(409).send({error: `Usuário ${resourceID} já existe existe`});
         }
     }
 }

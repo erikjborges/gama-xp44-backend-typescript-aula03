@@ -26,7 +26,7 @@ class ClientsController {
     }
 
     async removeClient(req: express.Request, res: express.Response) {
-        const client = await clientsService.deleteById(Number(req.params.clientId));
+        const client = await clientsService.deleteById(Number(req.params.cpfCnpj));
         res.status(204).send();
     }
 }
